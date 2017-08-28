@@ -66,6 +66,10 @@ class App(object):
                     if i2 > -1 and i2 < self.height:
                         if self.bombs[i][i2]:
                             bomb_count = bomb_count + 1
+        if self.bombs[coordinates[1]][coordinates[0]] == True:
+            self.tiles[coordinates[1]][coordinates[0]] = "bomb"
+            self.render_check = True
+            return True
         if bomb_count == 0:
             self.tiles[coordinates[1]][coordinates[0]] = "clear"
             self.render_check = True
@@ -79,6 +83,8 @@ class App(object):
         mouse = self.get_mouse()
         if mouse[1] == "left":
             clear_tiles = self.turn_tile(mouse[0])
+            #clearing multiple blocks at a time
+            '''
             uncleared_tiles = []
             while True:
                 if clear_tiles == False:
@@ -93,15 +99,17 @@ class App(object):
                         clear_tiles = True
                 else:
                     break
-
-
+            '''
         else:
             if self.tiles[mouse[0][1]][mouse[0][0]] == "plain":
                 self.tiles[mouse[0][1]][mouse[0][0]] = "flag"
                 self.render_check = True
+            if self.tiles[mouse[0][1]][mouse[0][0]] == "flag":
+                self.tiles[mouse[0][1]][mouse[0][0]] = "plain"
+                self.render_check = True
 
     def bomb_generation(self):
-        while bombs_number > 0:
+        while self.bombs_number > 0:
             bomb_coord = [(random.randint(0,(len(self.tiles[0]) - 1))),(random.randint(0,(len(self.tiles) - 1)))]
             if self.bombs[bomb_coord[0]][bomb_coord[1]] == False:
                 self.bombs[bomb_coord[0]][bomb_coord[1]] = True
@@ -110,8 +118,8 @@ class App(object):
 
 
 theApp = App(width,height,bombs_number)
-theApp.start()
 theApp.bomb_generation()
+theApp.start()
 
 
 while True:
